@@ -1,10 +1,10 @@
-import React, { useState, useEffect, Fragment } from "react";
-import { List, Container } from "semantic-ui-react";
-import "./styles.css";
-import axios from "axios";
-import { IActivity } from "../models/activity";
-import NavBar from "../../features/nav/NavBar";
-import ActivityDashboard from "../../features/activities/dashboard/ActivityDashboard";
+import React, { useState, useEffect, Fragment } from 'react';
+import { Container } from 'semantic-ui-react';
+import './styles.css';
+import axios from 'axios';
+import { IActivity } from '../models/activity';
+import NavBar from '../../features/nav/NavBar';
+import ActivityDashboard from '../../features/activities/dashboard/ActivityDashboard';
 
 const App = () => {
   const [activities, setActivities] = useState<IActivity[]>([]);
@@ -14,7 +14,7 @@ const App = () => {
   const [editMode, setEditMode] = useState(false);
 
   const handleSelectedActivity = (id: string) => {
-    setSelectedActivity(activities.filter((a) => a.id === id)[0]);
+    setSelectedActivity(activities.filter(a => a.id === id)[0]);
   };
 
   const handleOpenCreateForm = () => {
@@ -22,10 +22,22 @@ const App = () => {
     setEditMode(true);
   };
 
+  const handleCreateActivity = (activity: IActivity) => {
+    setActivities([...activities, activity]);
+    setSelectedActivity(activity);
+    setEditMode(false);
+  };
+
+  const handleEditActivity = (activity: IActivity) => {
+    setActivities([...activities.filter(a => a.id !== activity.id)]);
+    setSelectedActivity(activity);
+    setEditMode(false);
+  };
+
   useEffect(() => {
     axios
-      .get<IActivity[]>("http://localhost:5000/api/activities")
-      .then((response) => {
+      .get<IActivity[]>('http://localhost:5000/api/activities')
+      .then(response => {
         setActivities(response.data);
       });
   }, []);
@@ -33,7 +45,7 @@ const App = () => {
   return (
     <Fragment>
       <NavBar openCreateForm={handleOpenCreateForm} />
-      <Container style={{ marginTop: "7em" }}>
+      <Container style={{ marginTop: '7em' }}>
         <ActivityDashboard
           activities={activities}
           selectActivity={handleSelectedActivity}
@@ -41,6 +53,8 @@ const App = () => {
           editMode={editMode}
           setEditMode={setEditMode}
           setSelectedActivity={setSelectedActivity}
+          createActivity={handleCreateActivity}
+          editActivity={handleEditActivity}
         />
       </Container>
     </Fragment>

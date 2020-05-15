@@ -1,9 +1,9 @@
-import React from "react";
-import { Grid, List } from "semantic-ui-react";
-import ActivityList from "./ActivityList";
-import { IActivity } from "../../../app/models/activity";
-import ActivityDetails from "../details/ActivityDetails";
-import ActivityForm from "../form/ActivityForm";
+import React from 'react';
+import { Grid } from 'semantic-ui-react';
+import ActivityList from './ActivityList';
+import { IActivity } from '../../../app/models/activity';
+import ActivityDetails from '../details/ActivityDetails';
+import ActivityForm from '../form/ActivityForm';
 
 interface IProps {
   activities: IActivity[];
@@ -12,6 +12,8 @@ interface IProps {
   editMode: boolean;
   setEditMode: (editMode: boolean) => void;
   setSelectedActivity: (activity: IActivity | null) => void;
+  createActivity: (activity: IActivity) => void;
+  editActivity: (activity: IActivity) => void;
 }
 
 const ActivityDashboard: React.FC<IProps> = ({
@@ -21,6 +23,8 @@ const ActivityDashboard: React.FC<IProps> = ({
   editMode,
   setEditMode,
   setSelectedActivity,
+  createActivity,
+  editActivity,
 }) => {
   return (
     <Grid>
@@ -39,6 +43,8 @@ const ActivityDashboard: React.FC<IProps> = ({
           <ActivityForm
             setEditMode={setEditMode}
             activity={selectedActivity!}
+            createActivity={createActivity}
+            editActivity={editActivity}
           />
         )}
       </Grid.Column>
