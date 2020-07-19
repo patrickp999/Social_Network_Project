@@ -7,6 +7,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Persistence;
+using FluentValidation.AspNetCore;
+using API.Middleware;
 
 namespace API
 {
@@ -34,15 +36,19 @@ namespace API
         });
       });
       services.AddMediatR(typeof(List.Handler).Assembly);
-      services.AddControllers();
+      services.AddControllers().AddFluentValidation(cgf =>
+      {
+        cgf.RegisterValidatorsFromAssemblyContaining<Create>();
+      });
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
+      app.UseMiddleware<ErrorHandlingMiddleware>();
       if (env.IsDevelopment())
       {
-        app.UseDeveloperExceptionPage();
+        // app.UseDeveloperExceptionPage();
       }
 
       // app.UseHttpsRedirection(); // will work on security later
